@@ -8,6 +8,7 @@ import (
 // BookRoutes mendefinisikan rute terkait buku
 func BookRoutes(app *fiber.App) {
 	app.Get("/books", controller.GetBooks)
+	app.Get("/books/:books_id", controller.GetBooksById)
 	app.Post("/books", controller.CreateBook)
 	app.Put("/books/update/:books_id", controller.UpdateBook)
 	app.Delete("/books/delete/:books_id", controller.DeleteBook)

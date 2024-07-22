@@ -1,10 +1,8 @@
 package controller
 
 import (
-	"fmt"
 	"go-microservice/config"
 	"go-microservice/model"
-	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -30,7 +28,7 @@ func GetBooks(c *fiber.Ctx) error {
 func GetBooksById(c *fiber.Ctx) error {
 	var books model.Book
 	id := c.Params("books_id")
-	result := config.DB.Find(&books, "books_id = ?", id)
+	result := config.DB.First(&books, "books_id = ?", id)
 	if result.Error != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"StatusCode": fiber.StatusInternalServerError,
@@ -98,17 +96,7 @@ func UpdateBook(c *fiber.Ctx) error {
 
 // DeleteBook menghapus buku dari database
 func DeleteBook(c *fiber.Ctx) error {
-	idStr := c.Params("books_id") // Mengambil 'books_id' dari query parameter
-	fmt.Println("books_id:", idStr)
-	id, err := strconv.Atoi(idStr)
-	fmt.Println("books_id converted:", id)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"StatusCode": fiber.StatusBadRequest,
-			"Message":    "Invalid book ID",
-			"Data":       nil,
-		})
-	}
+	id := c.Params("books_id") // Mengambil 'books_id' dari query parameter
 	result := config.DB.Delete(&model.Book{}, "books_id = ?", id)
 	if result.Error != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
